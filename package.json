@@ -1,0 +1,11 @@
+{
+  "name": "eshopmodernizing-playwright-tests",
+  "private": true,
+  "scripts": {
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "typescript": "^5.9.2"
+  }
+}

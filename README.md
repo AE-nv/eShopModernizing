@@ -2,6 +2,10 @@
 
 The original source repo has various types of legacy .NET Framework apps. For the scope of this demo (AG Insurance RFP) we only retain the 'Browser with WebForms' app.
 
+## Getting started
+
+Clone this repository and delete all dolders except the `eShopLegacyWebFormsSolution`.
+
 ## The legacy .NET Framework Web Forms app
 
 ### Prerequisites
@@ -51,7 +55,9 @@ If you want to use a real database instead of mock data:
 - Ensure SQL LocalDB is installed and the `MSSQLLocalDB` instance is available
 - Verify the `CatalogDBContext` connection string in `eShopLegacyWebFormsSolution/src/eShopLegacyWebForms/Web.config`
 
-## Create the Documentation with the agents
+## Modernizing
+
+### Create the Documentation with the agents
 
 Prompt:
 
@@ -59,10 +65,16 @@ Prompt:
 make the documentation for the applicaion in eShopLegacyWebFormsSolution
 ```
 
-## Create the Golden Master with Playwright MCP
+### Create the Golden Master with Playwright MCP
 
 Prompt:
 
 ```
 Install and configure https://github.com/microsoft/playwright-mcp
+```
+
+Prompt:
+
+```
+Refer generate-tests.prompt.md. Generate playwright tests for the functional requirements (FR) in docs\traceability\requirements-traceability.md. Refer the README.md on how to start up the application. Work with Microsoft Edge as a broswer.
 ```
