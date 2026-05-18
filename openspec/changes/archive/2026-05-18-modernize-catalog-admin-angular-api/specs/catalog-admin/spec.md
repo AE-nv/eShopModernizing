@@ -2,7 +2,7 @@
 
 ### Requirement: Catalog administration list view
 
-The system shall provide an Angular catalog administration list view backed by a .NET 10 ASP.NET Core Web API. The list shall display catalog items in a paginated table with actions to view details, edit, and delete an item.
+The system SHALL provide an Angular catalog administration list view backed by a .NET 10 ASP.NET Core Web API. The list SHALL display catalog items in a paginated table with actions to view details, edit, and delete an item.
 
 #### Scenario: Display the first page of catalog items
 
@@ -14,7 +14,7 @@ The system shall provide an Angular catalog administration list view backed by a
 
 ### Requirement: Route-driven pagination
 
-The Angular application shall keep the current catalog page in the route, and the API shall support page-based catalog queries.
+The Angular application SHALL keep the current catalog page in the route, and the API SHALL support page-based catalog queries.
 
 #### Scenario: Navigate between catalog pages
 
@@ -26,7 +26,7 @@ The Angular application shall keep the current catalog page in the route, and th
 
 ### Requirement: Catalog item details
 
-The system shall allow a user to view the details of a single catalog item.
+The system SHALL allow a user to view the details of a single catalog item.
 
 #### Scenario: Open an existing catalog item
 
@@ -37,7 +37,7 @@ The system shall allow a user to view the details of a single catalog item.
 
 ### Requirement: Catalog item creation
 
-The system shall allow a user to create a catalog item from the Angular application through the ASP.NET Core Web API.
+The system SHALL allow a user to create a catalog item from the Angular application through the ASP.NET Core Web API.
 
 #### Scenario: Create a valid catalog item
 
@@ -48,7 +48,7 @@ The system shall allow a user to create a catalog item from the Angular applicat
 
 ### Requirement: Catalog item editing
 
-The system shall allow a user to update an existing catalog item.
+The system SHALL allow a user to update an existing catalog item.
 
 #### Scenario: Edit a previously created catalog item
 
@@ -60,7 +60,7 @@ The system shall allow a user to update an existing catalog item.
 
 ### Requirement: Catalog item deletion
 
-The system shall require confirmation before deleting a catalog item.
+The system SHALL require confirmation before deleting a catalog item.
 
 #### Scenario: Delete an existing catalog item
 
@@ -72,7 +72,7 @@ The system shall require confirmation before deleting a catalog item.
 
 ### Requirement: Catalog reference data
 
-The system shall provide catalog brands and catalog types as reference data for create and edit workflows.
+The system SHALL provide catalog brands and catalog types as reference data for create and edit workflows.
 
 #### Scenario: Load brand and type options for forms
 
@@ -83,7 +83,7 @@ The system shall provide catalog brands and catalog types as reference data for 
 
 ### Requirement: Validation rules for catalog items
 
-The API shall reject invalid catalog item input, and the Angular UI shall present the validation feedback.
+The API SHALL reject invalid catalog item input, and the Angular UI SHALL present the validation feedback.
 
 #### Scenario: Reject invalid price and stock input
 
@@ -99,7 +99,7 @@ The API shall reject invalid catalog item input, and the Angular UI shall presen
 
 ### Requirement: Modern target architecture
 
-The catalog administration capability shall be implemented as an Angular frontend integrated with a .NET 10 ASP.NET Core Web API backend.
+The catalog administration capability SHALL be implemented as an Angular frontend integrated with a .NET 10 ASP.NET Core Web API backend.
 
 #### Scenario: Separate UI and API responsibilities
 
