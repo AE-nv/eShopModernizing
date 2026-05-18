@@ -45,6 +45,30 @@ async function getRowByName(page: Page, name: string): Promise<CatalogRow> {
   };
 }
 
+async function gotoPage(page: Page, index: number) {
+  await page.goto(`/Default/index/${index}/size/10`);
+  await expect(page).toHaveURL(new RegExp(`/Default/index/${index}/size/10$`));
+}
+
+async function deleteItemIfPresent(page: Page, name: string) {
+  await gotoHome(page);
+
+  for (const pageIndex of [0, 1]) {
+    const row = page.locator('tbody tr').filter({ hasText: name }).first();
+    if (await row.count()) {
+      await row.getByRole('link', { name: 'Delete' }).click();
+      await expect(page.getByRole('heading', { level: 2, name: 'Delete' })).toBeVisible();
+      await page.getByRole('button', { name: '[ Delete ]' }).click();
+      await expectOnListPage(page);
+      return;
+    }
+
+    if (pageIndex === 0) {
+      await gotoPage(page, 1);
+    }
+  }
+}
+
 async function createItem(page: Page, name: string) {
   await gotoHome(page);
   await page.getByRole('link', { name: 'Create New' }).click();
@@ -63,16 +87,13 @@ async function createItem(page: Page, name: string) {
   await expectOnListPage(page);
 }
 
-async function deleteItemIfPresent(page: Page, name: string) {
-  await gotoHome(page);
-  const row = page.locator('tbody tr').filter({ hasText: name }).first();
+async function createAndOpenCreatedItem(page: Page, name: string) {
+  await createItem(page, name);
+  await gotoSecondPage(page);
+  const row = await getRowByName(page, name);
+  const createdItemId = getCatalogItemIdFromUrl(await row.editLink.getAttribute('href') ?? '');
 
-  if (await row.count()) {
-    await row.getByRole('link', { name: 'Delete' }).click();
-    await expect(page.getByRole('heading', { level: 2, name: 'Delete' })).toBeVisible();
-    await page.getByRole('button', { name: '[ Delete ]' }).click();
-    await expectOnListPage(page);
-  }
+  return { row, createdItemId };
 }
 
 test.describe('Catalog functional requirements', () => {
@@ -81,7 +102,7 @@ test.describe('Catalog functional requirements', () => {
     await deleteItemIfPresent(page, updatedItemName);
   });
 
-  test('covers FR-1, FR-2, FR-3, FR-4, FR-5, FR-6 and FR-7', async ({ page }) => {
+  test('FR-1 lists catalog items', async ({ page }) => {
     await gotoHome(page);
 
     await expect(page.getByRole('link', { name: 'Create New' })).toBeVisible();
@@ -96,13 +117,16 @@ test.describe('Catalog functional requirements', () => {
     await expect(firstRow).toContainText('.NET Bot Black Hoodie');
     await expect(firstRow).toContainText('.NET');
     await expect(firstRow).toContainText('T-Shirt');
+  });
+
+  test('FR-2 supports route-based pagination', async ({ page }) => {
+    await gotoHome(page);
 
     await expect(page.getByRole('link', { name: 'Previous' })).toHaveClass(/esh-pager-item--hidden/);
     await expect(page.getByRole('link', { name: 'Next' })).toBeVisible();
     await expect(page.locator('.esh-pager')).toContainText('Showing 10 of 12 products - Page 1 - 2');
 
-    await page.getByRole('link', { name: 'Next' }).click();
-    await expect(page).toHaveURL(/\/Default\/index\/1\/size\/10$/);
+    await gotoSecondPage(page);
     await expect(page.locator('.esh-pager')).toContainText('Showing 10 of 12 products - Page 2 - 2');
     await expect(page.locator('tbody tr')).toHaveCount(2);
     await expect(page.locator('tbody tr').first()).toContainText('Cup<T> Sheet');
@@ -110,9 +134,14 @@ test.describe('Catalog functional requirements', () => {
 
     await page.getByRole('link', { name: 'Previous' }).click();
     await expect(page).toHaveURL(/\/Default\/index\/0\/size\/10$/);
+  });
+
+  test('FR-3 shows item details', async ({ page }) => {
+    await gotoHome(page);
 
     const hoodieRow = await getRowByName(page, '.NET Bot Black Hoodie');
     await hoodieRow.detailsLink.click();
+
     await expect(page).toHaveURL(/\/Catalog\/Details\/1$/);
     await expect(page.getByRole('heading', { level: 2, name: 'Details' })).toBeVisible();
     await expect(page.locator('dl')).toContainText('.NET Bot Black Hoodie');
@@ -120,18 +149,23 @@ test.describe('Catalog functional requirements', () => {
     await expect(page.locator('dl')).toContainText('T-Shirt');
     await expect(page.getByRole('link', { name: 'Edit' })).toBeVisible();
     await page.getByRole('link', { name: 'Back to list' }).click();
+    await expectOnListPage(page);
+  });
 
-    await createItem(page, createdItemName);
-    await gotoSecondPage(page);
+  test('FR-4 creates a catalog item', async ({ page }) => {
+    const { row } = await createAndOpenCreatedItem(page, createdItemName);
 
-    const createdRow = await getRowByName(page, createdItemName);
-    await expect(createdRow.row).toContainText('Azure');
-    await expect(createdRow.row).toContainText('USB Memory Stick');
-    await expect(createdRow.row).toContainText('42.10');
-    await expect(createdRow.row).toContainText('7');
-    const createdItemId = getCatalogItemIdFromUrl(await createdRow.editLink.getAttribute('href') ?? '');
+    await expect(row.row).toContainText(createdItemName);
+    await expect(row.row).toContainText('Azure');
+    await expect(row.row).toContainText('USB Memory Stick');
+    await expect(row.row).toContainText('42.10');
+    await expect(row.row).toContainText('7');
+  });
 
-    await createdRow.editLink.click();
+  test('FR-5 edits a catalog item', async ({ page }) => {
+    const { createdItemId, row } = await createAndOpenCreatedItem(page, createdItemName);
+    await row.editLink.click();
+
     await expect(page).toHaveURL(new RegExp(`/Catalog/Edit/${createdItemId}$`));
     await expect(page.getByRole('heading', { level: 2, name: 'Edit' })).toBeVisible();
     await expect(page.locator('#MainContent_BrandDropDownList')).toHaveValue('1');
@@ -154,14 +188,35 @@ test.describe('Catalog functional requirements', () => {
     await expect(updatedRow.row).toContainText('Mug');
     await expect(updatedRow.row).toContainText('55.25');
     await expect(updatedRow.row).toContainText('9');
+  });
 
-    await updatedRow.deleteLink.click();
+  test('FR-6 deletes a catalog item', async ({ page }) => {
+    const { createdItemId, row } = await createAndOpenCreatedItem(page, createdItemName);
+    await row.deleteLink.click();
+
     await expect(page).toHaveURL(new RegExp(`/Catalog/Delete/${createdItemId}$`));
     await expect(page.getByRole('heading', { level: 2, name: 'Delete' })).toBeVisible();
-    await expect(page.locator('dl')).toContainText(updatedItemName);
+    await expect(page.locator('dl')).toContainText(createdItemName);
     await page.getByRole('button', { name: '[ Delete ]' }).click();
 
     await expectOnListPage(page);
-    await expect(page.locator('tbody tr').filter({ hasText: updatedItemName })).toHaveCount(0);
+    await gotoPage(page, 1);
+    await expect(page.locator('tbody tr').filter({ hasText: createdItemName })).toHaveCount(0);
+  });
+
+  test('FR-7 shows reference data for brands and types', async ({ page }) => {
+    await gotoHome(page);
+    await page.getByRole('link', { name: 'Create New' }).click();
+
+    await expect(page.getByRole('heading', { level: 2, name: 'Create' })).toBeVisible();
+    await expect(page.locator('#MainContent_Brand')).toContainText('Azure');
+    await expect(page.locator('#MainContent_Brand')).toContainText('.NET');
+    await expect(page.locator('#MainContent_Brand')).toContainText('Visual Studio');
+    await expect(page.locator('#MainContent_Brand')).toContainText('SQL Server');
+    await expect(page.locator('#MainContent_Brand')).toContainText('Other');
+    await expect(page.locator('#MainContent_Type')).toContainText('Mug');
+    await expect(page.locator('#MainContent_Type')).toContainText('T-Shirt');
+    await expect(page.locator('#MainContent_Type')).toContainText('Sheet');
+    await expect(page.locator('#MainContent_Type')).toContainText('USB Memory Stick');
   });
 });

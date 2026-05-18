@@ -55,7 +55,7 @@ If you want to use a real database instead of mock data:
 - Ensure SQL LocalDB is installed and the `MSSQLLocalDB` instance is available
 - Verify the `CatalogDBContext` connection string in `eShopLegacyWebFormsSolution/src/eShopLegacyWebForms/Web.config`
 
-## Modernizing
+## Stage 1: Code to Docs
 
 ### Create the Documentation with the agents
 
@@ -76,5 +76,13 @@ Install and configure https://github.com/microsoft/playwright-mcp
 Prompt:
 
 ```
-Refer generate-tests.prompt.md. Generate playwright tests for the functional requirements (FR) in docs\traceability\requirements-traceability.md. Refer the README.md on how to start up the application. Work with Microsoft Edge as a broswer.
+Refer generate-tests.prompt.md. Generate playwright tests for the functional requirements (FR) in docs\traceability\requirements-traceability.md. Refer the README.md on how to start up the application. Work with Microsoft Edge as a broswer. Make one test per FR.
 ```
+
+Command to run the suite later:
+
+```
+npx playwright test tests/catalog-functional-requirements.spec.ts
+```
+
+## Stage 2: Docs to Code
