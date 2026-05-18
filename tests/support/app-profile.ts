@@ -32,12 +32,6 @@ const profiles: Record<AppProfileName, AppProfile> = {
   },
 };
 
-function isAppProfileName(value: string): value is AppProfileName {
-  return value === 'webforms' || value === 'angular';
+export function getAppProfile(name: AppProfileName) {
+  return profiles[name];
 }
-
-const requestedProfile = process.env.PLAYWRIGHT_APP_PROFILE ?? 'angular';
-
-export const activeAppProfile = isAppProfileName(requestedProfile)
-  ? profiles[requestedProfile]
-  : profiles.webforms;

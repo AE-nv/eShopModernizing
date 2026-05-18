@@ -1,9 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
-import { activeAppProfile } from './tests/support/app-profile';
+import { getAppProfile, type AppProfileName } from './tests/support/app-profile';
 
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:54001';
-const webServerCommand = process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ?? activeAppProfile.webServerCommand;
+const selectedProject = getSelectedProject(process.argv) ?? 'angular';
+const activeAppProfile = getAppProfile(selectedProject);
 
 export default defineConfig({
   testDir: './tests',
@@ -11,19 +12,42 @@ export default defineConfig({
   retries: 0,
   workers: 1,
   reporter: 'list',
-  webServer: webServerCommand
-      ? {
-          command: webServerCommand,
-          url: baseURL,
-          reuseExistingServer: false,
-          timeout: 120000,
-        }
+  projects: [
+    {
+      name: activeAppProfile.name,
+      use: {
+        baseURL,
+        trace: 'on-first-retry',
+        screenshot: 'only-on-failure',
+        channel: 'msedge',
+        ...devices['Desktop Edge'],
+      },
+    },
+  ],
+  webServer: activeAppProfile.webServerCommand
+    ? {
+        command: activeAppProfile.webServerCommand,
+        url: `${baseURL}${activeAppProfile.homePath}`,
+        reuseExistingServer: false,
+        timeout: 240000,
+      }
     : undefined,
-  use: {
-    baseURL,
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    channel: 'msedge',
-    ...devices['Desktop Edge'],
-  },
 });
+
+function getSelectedProject(argv: string[]): AppProfileName | undefined {
+  for (let index = 0; index < argv.length; index += 1) {
+    const current = argv[index];
+    if (current === '--project') {
+      const next = argv[index + 1];
+      if (next === 'angular' || next === 'webforms') {
+        return next;
+      }
+    }
+
+    if (current === '--project=angular' || current === '--project=webforms') {
+      return current.slice('--project='.length) as AppProfileName;
+    }
+  }
+
+  return undefined;
+}
