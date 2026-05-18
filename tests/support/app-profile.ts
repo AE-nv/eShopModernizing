@@ -28,6 +28,7 @@ const profiles: Record<AppProfileName, AppProfile> = {
     homeUrl: /\/catalog$/,
     pagePath: (index, size = defaultPageSize) => `/catalog/page/${index}/size/${size}`,
     pageUrl: (index, size = defaultPageSize) => new RegExp(`/catalog/page/${index}/size/${size}$`),
+    webServerCommand: 'npm run start:e2e-app',
   },
 };
 
@@ -35,7 +36,7 @@ function isAppProfileName(value: string): value is AppProfileName {
   return value === 'webforms' || value === 'angular';
 }
 
-const requestedProfile = process.env.PLAYWRIGHT_APP_PROFILE ?? 'webforms';
+const requestedProfile = process.env.PLAYWRIGHT_APP_PROFILE ?? 'angular';
 
 export const activeAppProfile = isAppProfileName(requestedProfile)
   ? profiles[requestedProfile]

@@ -1,14 +1,22 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.FileProviders;
 using CatalogAdmin.Api;
 
 var builder = WebApplication.CreateBuilder(args);
+var spaRoot = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser");
 
 builder.Services.AddSingleton<CatalogStore>();
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseDefaultFiles(new DefaultFilesOptions
+{
+    FileProvider = new PhysicalFileProvider(spaRoot)
+});
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(spaRoot)
+});
 
 app.MapGet("/api/catalog-items", (int? pageIndex, int? pageSize, CatalogStore store) =>
 {
@@ -53,7 +61,10 @@ app.MapDelete("/api/catalog-items/{id:int}", (int id, CatalogStore store) =>
 app.MapGet("/api/catalog-brands", (CatalogStore store) => Results.Ok(store.GetCatalogBrands()));
 app.MapGet("/api/catalog-types", (CatalogStore store) => Results.Ok(store.GetCatalogTypes()));
 
-app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("index.html", new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(spaRoot)
+});
 
 app.Run();
 

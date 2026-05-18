@@ -186,7 +186,6 @@ public sealed class CatalogItemRequest : IValidatableObject
     [Range(1, int.MaxValue)]
     public int CatalogTypeId { get; init; }
 
-    [Range(typeof(decimal), "0", "9999999999999999.99")]
     public decimal Price { get; init; }
 
     [Range(0, int.MaxValue)]
@@ -200,6 +199,13 @@ public sealed class CatalogItemRequest : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
+        if (Price < 0)
+        {
+            yield return new ValidationResult(
+                "The field Price must be a positive number with maximum two decimals.",
+                [nameof(Price)]);
+        }
+
         if (decimal.Round(Price, 2) != Price)
         {
             yield return new ValidationResult(

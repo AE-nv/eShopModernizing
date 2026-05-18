@@ -12,12 +12,12 @@ export default defineConfig({
   workers: 1,
   reporter: 'list',
   webServer: webServerCommand
-    ? {
-        command: webServerCommand,
-        url: baseURL,
-        reuseExistingServer: false,
-        timeout: 120000,
-      }
+      ? {
+          command: webServerCommand,
+          url: baseURL,
+          reuseExistingServer: false,
+          timeout: 120000,
+        }
     : undefined,
   use: {
     baseURL,

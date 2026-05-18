@@ -1,0 +1,175 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f3f5f8;
+  color: #1a1a1a;
+}
+
+a {
+  color: #005ea5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+th,
+td {
+  border-bottom: 1px solid #d9e1e8;
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #eef3f8;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #98a8b8;
+  border-radius: 4px;
+}
+
+button {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  border: 1px solid #005ea5;
+  border-radius: 4px;
+  background: #005ea5;
+  color: #fff;
+  cursor: pointer;
+}
+
+.page-card {
+  padding: 1.5rem;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(25, 45, 72, 0.08);
+}
+
+.page-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.esh-link-item,
+.esh-table-link {
+  text-decoration: none;
+}
+
+.esh-link-item:hover,
+.esh-table-link:hover {
+  text-decoration: underline;
+}
+
+.esh-pager {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.esh-pager-item--hidden {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.form-grid .form-field--full {
+  grid-column: 1 / -1;
+}
+
+.field-error,
+.form-error {
+  margin-top: 0.35rem;
+  color: #a1260d;
+  font-size: 0.95rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.75rem 1rem;
+}
+
+.details-grid dt {
+  font-weight: 700;
+}
+
+.catalog-picture {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #dfe9f3, #ffffff);
+  border: 1px solid #d9e1e8;
+}
+
+@media (max-width: 800px) {
+  .esh-pager {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  tr {
+    margin-bottom: 1rem;
+    border: 1px solid #d9e1e8;
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  td {
+    border: 0;
+    border-bottom: 1px solid #edf2f7;
+  }
+
+  td:last-child {
+    border-bottom: 0;
+  }
+}

@@ -2,6 +2,7 @@
   "name": "eshopmodernizing-playwright-tests",
   "private": true,
   "scripts": {
+    "start:e2e-app": "npm --prefix catalog-admin-ui run build -- --configuration development && dotnet run --project catalog-admin-api/CatalogAdmin.Api.csproj --no-build --urls http://localhost:54001",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
