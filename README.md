@@ -2,9 +2,9 @@
 
 The original source repo has various types of legacy .NET Framework apps. For the scope of this demo (AG Insurance RFP) we only retain the 'Browser with WebForms' app.
 
-## Running the legacy version
+## The legacy .NET Framework Web Forms app
 
-Verified prerequisites:
+### Prerequisites
 
 - Visual Studio with ASP.NET and web tooling installed
 - .NET Framework 4.7.2 targeting pack
@@ -21,7 +21,7 @@ Notes:
 - The app builds and runs in its default mock-data configuration, so SQL Server or LocalDB is not required for a basic local run.
 - The legacy repo-local `nuget.exe` is not needed for this solution. Restore works with MSBuild using `RestorePackagesConfig=true`.
 
-### Exact commands to run locally
+### Run it locally
 
 Run these commands from the repository root in PowerShell:
 
@@ -50,3 +50,19 @@ If you want to use a real database instead of mock data:
 - Change `UseMockData` to `false` in `eShopLegacyWebFormsSolution/src/eShopLegacyWebForms/Web.config`
 - Ensure SQL LocalDB is installed and the `MSSQLLocalDB` instance is available
 - Verify the `CatalogDBContext` connection string in `eShopLegacyWebFormsSolution/src/eShopLegacyWebForms/Web.config`
+
+## Create the Documentation with the agents
+
+Prompt:
+
+```
+make the documentation for the applicaion in eShopLegacyWebFormsSolution
+```
+
+## Create the Golden Master with Playwright MCP
+
+Prompt:
+
+```
+Install and configure https://github.com/microsoft/playwright-mcp
+```

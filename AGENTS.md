@@ -1,4 +1,4 @@
-# Documentation System — Copilot Instructions
+# Documentation System — Instructions
 
 ## Overview
 

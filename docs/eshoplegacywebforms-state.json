@@ -1,0 +1,38 @@
+{
+  "module": "eshoplegacywebforms",
+  "sourceRoot": "eShopLegacyWebFormsSolution/src/eShopLegacyWebForms",
+  "language": "vbnet-skill-family-dotnet-webforms-csharp",
+  "detectedPlatform": ".NET Framework 4.7.2 ASP.NET Web Forms",
+  "currentPhase": "verification",
+  "phaseHistory": [
+    "planning",
+    "discovery",
+    "business-documentation",
+    "technical-documentation",
+    "coordination",
+    "verification"
+  ],
+  "progress": {
+    "pagesDocumented": 6,
+    "servicesDocumented": 3,
+    "entitiesDocumented": 3,
+    "routesDocumented": 6,
+    "configFilesDocumented": 4
+  },
+  "artifacts": [
+    "docs/documentation-plan.md",
+    "docs/index.md",
+    "docs/system-overview.md",
+    "docs/discovery/legacy-webforms-application.md",
+    "docs/business/catalog-admin-application.md",
+    "docs/functional/catalog-management-requirements.md",
+    "docs/domain/catalog-domain-model.md",
+    "docs/verification/verification-report.md",
+    "docs/traceability/requirements-traceability.md"
+  ],
+  "notes": [
+    "Application is a catalog administration sample rather than a customer storefront.",
+    "Default runtime path uses mock data unless UseMockData is disabled in Web.config.",
+    "Documentation was derived directly from source under eShopLegacyWebFormsSolution/src/eShopLegacyWebForms."
+  ]
+}
