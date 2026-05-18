@@ -76,7 +76,7 @@ Install and configure https://github.com/microsoft/playwright-mcp
 Prompt:
 
 ```
-Refer generate-tests.prompt.md. Generate playwright tests for the functional requirements (FR) in docs\traceability\requirements-traceability.md. Refer the README.md on how to start up the application. Work with Microsoft Edge as a broswer. Make one test per FR.
+Refer generate-tests.prompt.md. Generate playwright tests for the functional requirements (FR) in docs\traceability\requirements-traceability.md. Refer the README.md on how to start up the application. Work with Microsoft Edge as a as a browser. Make one test per FR. The suite must be agnostic between the legacy Web Forms UI and the modernized Angular UI: use a shared UI contract based on accessible roles, labels, and prescribed `data-testid` attributes; avoid framework-specific IDs, classes, and DOM structure; isolate only unavoidable startup and route differences in a small app-profile/config layer.
 ```
 
 Command to run the suite later:
@@ -98,7 +98,17 @@ In the Terminal (not in your agent):
 openspec init
 ```
 
+### Generate the spec
+
 In your agent:
 ```
-Create an openspec change to implement the functionality in `docs`. The playwright test suite `C:\Users\WouterVanRanst\repos\ae-eshopmodernizing\eShopModernizing\tests\catalog-functional-requirements.spec.ts`. Target architecture is .NET 10 ASP.NET Core Web API + Angular
+Create an openspec change to implement the functionality in `docs`. The playwright test suite `C:\Users\WouterVanRanst\repos\ae-eshopmodernizing\eShopModernizing\tests\catalog-functional-requirements.spec.ts`. Target architecture is .NET 10 ASP.NET Core Web API + Angular. The name of the new application is eShopModernized.
+```
+
+### Implement the spec
+
+In your agent:
+
+```
+Implement the change. You can adapt the existing playwright suite to match angular, but the behavior MAY NOT change.
 ```
