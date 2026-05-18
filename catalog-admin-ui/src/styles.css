@@ -130,8 +130,17 @@ button {
   width: 48px;
   height: 48px;
   border-radius: 6px;
-  background: linear-gradient(135deg, #dfe9f3, #ffffff);
   border: 1px solid #d9e1e8;
+  object-fit: cover;
+}
+
+.catalog-picture--large {
+  width: 240px;
+  height: 240px;
+}
+
+.catalog-detail-image {
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 800px) {

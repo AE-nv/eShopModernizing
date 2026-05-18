@@ -13,6 +13,10 @@ import { CatalogItemDetails } from './catalog.models';
       <h2>Details</h2>
 
       @if (item; as currentItem) {
+        <div class="catalog-detail-image">
+          <img class="catalog-picture catalog-picture--large" [src]="currentItem.pictureUri" [alt]="currentItem.name" />
+        </div>
+
         <dl class="details-grid" data-testid="catalog-details">
           <dt>Name</dt>
           <dd>{{ currentItem.name }}</dd>

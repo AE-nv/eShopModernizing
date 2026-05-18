@@ -259,7 +259,6 @@ public sealed record CatalogTypeRecord(int Id, string Name);
 public sealed class CatalogItemRecord
 {
     public const string DefaultPictureName = "dummy.png";
-    private const string DefaultPictureUri = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -271,5 +270,5 @@ public sealed class CatalogItemRecord
     public int AvailableStock { get; set; }
     public int RestockThreshold { get; set; }
     public int MaxStockThreshold { get; set; }
-    public string PictureUri { get; set; } = DefaultPictureUri;
+    public string PictureUri => $"/Pics/{PictureFileName}";
 }
