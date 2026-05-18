@@ -82,7 +82,13 @@ Refer generate-tests.prompt.md. Generate playwright tests for the functional req
 Command to run the suite later:
 
 ```
-npx playwright test tests/catalog-functional-requirements.spec.ts
+npx playwright test tests/catalog-functional-requirements.spec.ts --headed
 ```
 
 ## Stage 2: Docs to Code
+
+### Choose your spec driven development framework
+
+For this demo, we go with openspec.
+
+### Initialize
