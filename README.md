@@ -92,3 +92,13 @@ npx playwright test tests/catalog-functional-requirements.spec.ts --headed
 For this demo, we go with openspec.
 
 ### Initialize
+
+In the Terminal (not in your agent):
+```
+openspec init
+```
+
+In your agent:
+```
+Create an openspec change to implement the functionality in `docs`. The playwright test suite `C:\Users\WouterVanRanst\repos\ae-eshopmodernizing\eShopModernizing\tests\catalog-functional-requirements.spec.ts`. Target architecture is .NET 10 ASP.NET Core Web API + Angular
+```
