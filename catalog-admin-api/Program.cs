@@ -4,6 +4,13 @@ using CatalogAdmin.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 var spaRoot = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser");
+var legacyPicturesRoot = Path.GetFullPath(Path.Combine(
+    builder.Environment.ContentRootPath,
+    "..",
+    "eShopLegacyWebFormsSolution",
+    "src",
+    "eShopLegacyWebForms",
+    "Pics"));
 
 builder.Services.AddSingleton<CatalogStore>();
 
@@ -16,6 +23,11 @@ app.UseDefaultFiles(new DefaultFilesOptions
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(spaRoot)
+});
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(legacyPicturesRoot),
+    RequestPath = "/Pics"
 });
 
 app.MapGet("/api/catalog-items", (int? pageIndex, int? pageSize, CatalogStore store) =>
