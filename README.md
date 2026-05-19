@@ -56,63 +56,6 @@ If you want to use a real database instead of mock data:
 - Ensure SQL LocalDB is installed and the `MSSQLLocalDB` instance is available
 - Verify the `CatalogDBContext` connection string in `eShopLegacyWebFormsSolution/src/eShopLegacyWebForms/Web.config`
 
-## The modernized Angular + .NET app
-
-### Prerequisites
-
-- .NET 10 SDK
-- Node.js and npm
-
-### Run it locally
-
-Run these commands from the repository root in PowerShell:
-
-```powershell
-npm install
-npm --prefix .\catalog-admin-ui install
-dotnet build .\catalog-admin-api\CatalogAdmin.Api.csproj
-npm --prefix .\catalog-admin-ui run build -- --configuration development
-dotnet run --project .\catalog-admin-api\CatalogAdmin.Api.csproj --no-build --urls http://localhost:54001
-```
-
-Then open:
-
-- `http://localhost:54001/catalog`
-
-Stop the app with `Ctrl+C`.
-
-## Running the Playwright suite
-
-Install the root test dependencies first:
-
-```powershell
-npm install
-```
-
-### Against the modernized app
-
-Use the `angular` Playwright project. Playwright will build and start the modernized app automatically.
-
-```powershell
-npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
-```
-
-### Against the legacy app
-
-Use the `webforms` Playwright project:
-
-```powershell
-npx playwright test tests/catalog-functional-requirements.spec.ts --project webforms --headed
-```
-
-The legacy profile uses IIS Express on `http://localhost:54001`.
-
-### Run the same suite against both apps
-
-```powershell
-npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
-npx playwright test tests/catalog-functional-requirements.spec.ts --project webforms --headed
-```
 
 ## Stage 1: Code to Docs
 
@@ -138,17 +81,22 @@ Prompt:
 Refer generate-tests.prompt.md. Generate playwright tests for the functional requirements (FR) in docs\traceability\requirements-traceability.md. Refer the README.md on how to start up the application. Work with Microsoft Edge as a as a browser. Make one test per FR. The suite must be agnostic between the legacy Web Forms UI and the modernized Angular UI: use a shared UI contract based on accessible roles, labels, and prescribed `data-testid` attributes; avoid framework-specific IDs, classes, and DOM structure; isolate only unavoidable startup and route differences in a small app-profile/config layer.
 ```
 
-Command to run the suite later:
+### Run the Golden Master against the legacy application
 
+Use the `webforms` Playwright project:
+
+```powershell
+npx playwright test tests/catalog-functional-requirements.spec.ts --project webforms --headed
 ```
-npx playwright test tests/catalog-functional-requirements.spec.ts --headed
-```
+
 
 ## Stage 2: Docs to Code
 
-### Choose your spec driven development framework
+### Prerequisites
 
-For this demo, we go with openspec.
+- .NET 10 SDK
+- Node.js and npm
+- A spec driven development framework to your choosing: for this demo, we go with openspec.
 
 ### Initialize
 
@@ -169,5 +117,39 @@ Create an openspec change to implement the functionality in `docs`. The playwrig
 In your agent:
 
 ```
-Implement the change. You can adapt the existing playwright suite to match angular, but the behavior MAY NOT change.
+Implement the change
 ```
+
+### Run it locally
+
+Run these commands from the repository root in PowerShell:
+
+```powershell
+npm install
+npm --prefix .\catalog-admin-ui install
+dotnet build .\catalog-admin-api\CatalogAdmin.Api.csproj
+npm --prefix .\catalog-admin-ui run build -- --configuration development
+dotnet run --project .\catalog-admin-api\CatalogAdmin.Api.csproj --no-build --urls http://localhost:54001
+```
+
+Then open:
+
+- `http://localhost:54001/catalog`
+
+Stop the app with `Ctrl+C`.
+
+## Running the Playwright suite against the modernized app
+
+Use the `angular` Playwright project. Playwright will build and start the modernized app automatically.
+
+```powershell
+npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
+```
+
+### Run the same suite against both apps
+
+```powershell
+npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
+npx playwright test tests/catalog-functional-requirements.spec.ts --project webforms --headed
+```
+
