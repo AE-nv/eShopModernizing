@@ -138,7 +138,7 @@ Then open:
 
 Stop the app with `Ctrl+C`.
 
-## Running the Playwright suite against the modernized app
+### Running the Playwright suite against the modernized app
 
 Use the `angular` Playwright project. Playwright will build and start the modernized app automatically.
 
@@ -146,10 +146,20 @@ Use the `angular` Playwright project. Playwright will build and start the modern
 npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
 ```
 
-### Run the same suite against both apps
+For a slower demo run, set `PLAYWRIGHT_DEMO_DELAY_MS` to add a pause before each navigation and UI action:
+
+```powershell
+$env:PLAYWRIGHT_DEMO_DELAY_MS = '1000'
+npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
+Remove-Item Env:PLAYWRIGHT_DEMO_DELAY_MS
+```
+
+## Run the Golden Master against both apps
 
 ```powershell
 npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
 npx playwright test tests/catalog-functional-requirements.spec.ts --project webforms --headed
 ```
+
+You can use the same `PLAYWRIGHT_DEMO_DELAY_MS` variable with the `webforms` project as well.
 

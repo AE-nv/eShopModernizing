@@ -22,6 +22,7 @@ import {
 const createdItemName = 'Playwright FR Item';
 const updatedItemName = 'Playwright FR Item Updated';
 const searchPageIndexes = [0, 1, 2];
+const demoDelayMs = getDemoDelayMs();
 
 const test = base.extend<{ appProfile: ReturnType<typeof getAppProfile> }>({
   appProfile: async ({}, use, testInfo) => {
@@ -36,8 +37,44 @@ type CatalogRow = {
   deleteLink: Locator;
 };
 
+function getDemoDelayMs() {
+  const configured = process.env.PLAYWRIGHT_DEMO_DELAY_MS;
+  if (!configured) {
+    return 0;
+  }
+
+  const parsed = Number.parseInt(configured, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
+async function waitForDemo(page: Page) {
+  if (demoDelayMs > 0) {
+    await page.waitForTimeout(demoDelayMs);
+  }
+}
+
+async function gotoWithDemo(page: Page, url: string) {
+  await waitForDemo(page);
+  await page.goto(url);
+}
+
+async function clickWithDemo(page: Page, locator: Locator) {
+  await waitForDemo(page);
+  await locator.click();
+}
+
+async function fillWithDemo(page: Page, locator: Locator, value: string) {
+  await waitForDemo(page);
+  await locator.fill(value);
+}
+
+async function selectWithDemo(page: Page, locator: Locator, option: { label: string }) {
+  await waitForDemo(page);
+  await locator.selectOption(option);
+}
+
 async function gotoHome(page: Page, appProfile: ReturnType<typeof getAppProfile>) {
-  await page.goto(appProfile.homePath);
+  await gotoWithDemo(page, appProfile.homePath);
   await expect(catalogHeading(page)).toBeVisible();
 }
 
@@ -46,12 +83,12 @@ async function expectOnListPage(page: Page, appProfile: ReturnType<typeof getApp
 }
 
 async function gotoPage(page: Page, appProfile: ReturnType<typeof getAppProfile>, index: number) {
-  await page.goto(appProfile.pagePath(index, defaultPageSize));
+  await gotoWithDemo(page, appProfile.pagePath(index, defaultPageSize));
   await expect(page).toHaveURL(appProfile.pageUrl(index, defaultPageSize));
 }
 
 async function gotoSecondPage(page: Page, appProfile: ReturnType<typeof getAppProfile>) {
-  await nextPageAction(page).click();
+  await clickWithDemo(page, nextPageAction(page));
   await expect(page).toHaveURL(appProfile.pageUrl(1, defaultPageSize));
 }
 
@@ -88,9 +125,9 @@ async function deleteItemIfPresent(page: Page, appProfile: ReturnType<typeof get
 
       const row = rowByName(page, name);
       if (await row.count()) {
-        await rowAction(row, 'Delete').click();
+        await clickWithDemo(page, rowAction(row, 'Delete'));
         await expect(pageHeading(page, 'Delete')).toBeVisible();
-        await deleteButton(page).click();
+        await clickWithDemo(page, deleteButton(page));
         await expectOnListPage(page, appProfile);
         return;
       }
@@ -99,25 +136,25 @@ async function deleteItemIfPresent(page: Page, appProfile: ReturnType<typeof get
 
 async function createItem(page: Page, appProfile: ReturnType<typeof getAppProfile>, name: string) {
   await gotoHome(page, appProfile);
-  await createItemAction(page).click();
+  await clickWithDemo(page, createItemAction(page));
 
   await expect(pageHeading(page, 'Create')).toBeVisible();
-  await field(page, 'name').fill(name);
-  await field(page, 'description').fill('Created by Playwright FR coverage');
-  await field(page, 'brand').selectOption({ label: 'Azure' });
-  await field(page, 'type').selectOption({ label: 'USB Memory Stick' });
-  await field(page, 'price').fill('42.10');
-  await field(page, 'stock').fill('7');
-  await field(page, 'restock').fill('2');
-  await field(page, 'maxStock').fill('12');
+  await fillWithDemo(page, field(page, 'name'), name);
+  await fillWithDemo(page, field(page, 'description'), 'Created by Playwright FR coverage');
+  await selectWithDemo(page, field(page, 'brand'), { label: 'Azure' });
+  await selectWithDemo(page, field(page, 'type'), { label: 'USB Memory Stick' });
+  await fillWithDemo(page, field(page, 'price'), '42.10');
+  await fillWithDemo(page, field(page, 'stock'), '7');
+  await fillWithDemo(page, field(page, 'restock'), '2');
+  await fillWithDemo(page, field(page, 'maxStock'), '12');
 
-  await createButton(page).click();
+  await clickWithDemo(page, createButton(page));
   await expectOnListPage(page, appProfile);
 }
 
 async function openCreateForm(page: Page, appProfile: ReturnType<typeof getAppProfile>) {
   await gotoHome(page, appProfile);
-  await createItemAction(page).click();
+  await clickWithDemo(page, createItemAction(page));
   await expect(pageHeading(page, 'Create')).toBeVisible();
 }
 
@@ -176,21 +213,21 @@ test.describe('Catalog functional requirements', () => {
     await gotoSecondPage(page, appProfile);
     await expect(rowByName(page, 'Cup<T> Sheet')).toBeVisible();
 
-    await previousPageAction(page).click();
+    await clickWithDemo(page, previousPageAction(page));
     await expect(page).toHaveURL(appProfile.pageUrl(0, defaultPageSize));
     await expect(rowByName(page, '.NET Bot Black Hoodie')).toBeVisible();
   });
 
   test('FR-3 shows item details', async ({ page, appProfile }) => {
     const hoodieRow = await getRowByName(page, appProfile, '.NET Bot Black Hoodie');
-    await hoodieRow.detailsLink.click();
+    await clickWithDemo(page, hoodieRow.detailsLink);
 
     await expect(pageHeading(page, 'Details')).toBeVisible();
     await expect(detailsPanel(page)).toContainText('.NET Bot Black Hoodie');
     await expect(detailsPanel(page)).toContainText('.NET');
     await expect(detailsPanel(page)).toContainText('T-Shirt');
     await expect(editPageAction(page)).toBeVisible();
-    await backToListAction(page).click();
+    await clickWithDemo(page, backToListAction(page));
     await expectOnListPage(page, appProfile);
   });
 
@@ -208,21 +245,21 @@ test.describe('Catalog functional requirements', () => {
   test('FR-5 edits a catalog item', async ({ page, appProfile }) => {
     await createItem(page, appProfile, createdItemName);
     const row = await getRowByName(page, appProfile, createdItemName);
-    await row.editLink.click();
+    await clickWithDemo(page, row.editLink);
 
     await expect(pageHeading(page, 'Edit')).toBeVisible();
     await expect(field(page, 'brand')).toHaveValue('1');
     await expect(field(page, 'type')).toHaveValue('4');
 
-    await field(page, 'name').fill(updatedItemName);
-    await field(page, 'description').fill('Updated by Playwright');
-    await field(page, 'brand').selectOption({ label: 'Visual Studio' });
-    await field(page, 'type').selectOption({ label: 'Mug' });
-    await field(page, 'price').fill('55.25');
-    await field(page, 'stock').fill('9');
-    await field(page, 'restock').fill('3');
-    await field(page, 'maxStock').fill('15');
-    await saveButton(page).click();
+    await fillWithDemo(page, field(page, 'name'), updatedItemName);
+    await fillWithDemo(page, field(page, 'description'), 'Updated by Playwright');
+    await selectWithDemo(page, field(page, 'brand'), { label: 'Visual Studio' });
+    await selectWithDemo(page, field(page, 'type'), { label: 'Mug' });
+    await fillWithDemo(page, field(page, 'price'), '55.25');
+    await fillWithDemo(page, field(page, 'stock'), '9');
+    await fillWithDemo(page, field(page, 'restock'), '3');
+    await fillWithDemo(page, field(page, 'maxStock'), '15');
+    await clickWithDemo(page, saveButton(page));
 
     await expectOnListPage(page, appProfile);
     const updatedRow = await getRowByName(page, appProfile, updatedItemName);
@@ -235,11 +272,11 @@ test.describe('Catalog functional requirements', () => {
   test('FR-6 deletes a catalog item', async ({ page, appProfile }) => {
     await createItem(page, appProfile, createdItemName);
     const row = await getRowByName(page, appProfile, createdItemName);
-    await row.deleteLink.click();
+    await clickWithDemo(page, row.deleteLink);
 
     await expect(pageHeading(page, 'Delete')).toBeVisible();
     await expect(detailsPanel(page)).toContainText(createdItemName);
-    await deleteButton(page).click();
+    await clickWithDemo(page, deleteButton(page));
 
     await expectOnListPage(page, appProfile);
     for (const pageIndex of searchPageIndexes) {
@@ -285,14 +322,14 @@ test.describe('Catalog functional requirements', () => {
     }
 
     await openCreateForm(page, appProfile);
-    await field(page, 'name').fill('Invalid UI Item');
-    await field(page, 'brand').selectOption({ label: 'Azure' });
-    await field(page, 'type').selectOption({ label: 'USB Memory Stick' });
-    await field(page, 'price').fill('-1');
-    await field(page, 'stock').fill('-1');
-    await field(page, 'restock').fill('0');
-    await field(page, 'maxStock').fill('1');
-    await createButton(page).click();
+    await fillWithDemo(page, field(page, 'name'), 'Invalid UI Item');
+    await selectWithDemo(page, field(page, 'brand'), { label: 'Azure' });
+    await selectWithDemo(page, field(page, 'type'), { label: 'USB Memory Stick' });
+    await fillWithDemo(page, field(page, 'price'), '-1');
+    await fillWithDemo(page, field(page, 'stock'), '-1');
+    await fillWithDemo(page, field(page, 'restock'), '0');
+    await fillWithDemo(page, field(page, 'maxStock'), '1');
+    await clickWithDemo(page, createButton(page));
 
     await expect(pageHeading(page, 'Create')).toBeVisible();
     await expect(page).toHaveURL(/\/Catalog\/Create$/);
@@ -320,7 +357,7 @@ test.describe('Catalog functional requirements', () => {
     }
 
     await openCreateForm(page, appProfile);
-    await createButton(page).click();
+    await clickWithDemo(page, createButton(page));
 
     await expect(pageHeading(page, 'Create')).toBeVisible();
     await expect(page).toHaveURL(/\/Catalog\/Create$/);
