@@ -23,6 +23,7 @@ const createdItemName = 'Playwright FR Item';
 const updatedItemName = 'Playwright FR Item Updated';
 const searchPageIndexes = [0, 1, 2];
 const demoDelayMs = getDemoDelayMs();
+const demoDelayBudget = demoDelayMs * 60;
 
 const test = base.extend<{ appProfile: ReturnType<typeof getAppProfile> }>({
   appProfile: async ({}, use, testInfo) => {
@@ -186,6 +187,7 @@ async function expectMissingRequiredMessages(page: Page, appProfile: ReturnType<
 
 test.describe('Catalog functional requirements', () => {
   test.beforeEach(async ({ page, appProfile }) => {
+    test.setTimeout(test.info().timeout + demoDelayBudget);
     await deleteItemIfPresent(page, appProfile, createdItemName);
     await deleteItemIfPresent(page, appProfile, updatedItemName);
   });
