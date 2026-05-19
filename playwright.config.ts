@@ -6,24 +6,26 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:54001';
 const selectedProject = getSelectedProject(process.argv) ?? 'angular';
 const activeAppProfile = getAppProfile(selectedProject);
 
+function projectConfig(name: AppProfileName) {
+  return {
+    name,
+    use: {
+      baseURL,
+      trace: 'on-first-retry' as const,
+      screenshot: 'only-on-failure' as const,
+      channel: 'msedge',
+      ...devices['Desktop Edge'],
+    },
+  };
+}
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: false,
   retries: 0,
   workers: 1,
   reporter: 'list',
-  projects: [
-    {
-      name: activeAppProfile.name,
-      use: {
-        baseURL,
-        trace: 'on-first-retry',
-        screenshot: 'only-on-failure',
-        channel: 'msedge',
-        ...devices['Desktop Edge'],
-      },
-    },
-  ],
+  projects: [projectConfig('angular'), projectConfig('webforms')],
   webServer: activeAppProfile.webServerCommand
     ? {
         command: activeAppProfile.webServerCommand,

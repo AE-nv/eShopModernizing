@@ -127,6 +127,26 @@ async function expectValidationError(response: APIResponse, fieldName: string) {
   expect(problem.errors?.[fieldName]?.length).toBeGreaterThan(0);
 }
 
+async function expectInvalidPriceAndStockMessages(page: Page, appProfile: ReturnType<typeof getAppProfile>) {
+  if (appProfile.name === 'angular') {
+    await expect(page.getByText('The field Price must be a positive number with maximum two decimals.')).toBeVisible();
+    await expect(page.getByText('The value must be a non-negative integer.')).toBeVisible();
+    return;
+  }
+
+  await expect(page.getByText(/The Price must be a positive number with maximum two decimals/i)).toBeVisible();
+  await expect(page.getByText(/The field Stock must be between 0 and 10 million/i)).toBeVisible();
+}
+
+async function expectMissingRequiredMessages(page: Page, appProfile: ReturnType<typeof getAppProfile>) {
+  if (appProfile.name === 'angular') {
+    await expect(page.getByText('This field is required.').first()).toBeVisible();
+    return;
+  }
+
+  await expect(page.getByText('The Name field is required.')).toBeVisible();
+}
+
 test.describe('Catalog functional requirements', () => {
   test.beforeEach(async ({ page, appProfile }) => {
     await deleteItemIfPresent(page, appProfile, createdItemName);
@@ -247,20 +267,22 @@ test.describe('Catalog functional requirements', () => {
   });
 
   test('DV-1 and DV-2 reject invalid price and stock input', async ({ page, request, appProfile }) => {
-    const invalidPriceResponse = await request.post('/api/catalog-items', {
-      data: {
-        name: 'Invalid Price Item',
-        description: 'Invalid price',
-        catalogBrandId: 1,
-        catalogTypeId: 4,
-        price: 12.345,
-        availableStock: 1,
-        restockThreshold: 0,
-        maxStockThreshold: 2,
-      },
-    });
+    if (appProfile.name === 'angular') {
+      const invalidPriceResponse = await request.post('/api/catalog-items', {
+        data: {
+          name: 'Invalid Price Item',
+          description: 'Invalid price',
+          catalogBrandId: 1,
+          catalogTypeId: 4,
+          price: 12.345,
+          availableStock: 1,
+          restockThreshold: 0,
+          maxStockThreshold: 2,
+        },
+      });
 
-    await expectValidationError(invalidPriceResponse, 'Price');
+      await expectValidationError(invalidPriceResponse, 'Price');
+    }
 
     await openCreateForm(page, appProfile);
     await field(page, 'name').fill('Invalid UI Item');
@@ -274,34 +296,35 @@ test.describe('Catalog functional requirements', () => {
 
     await expect(pageHeading(page, 'Create')).toBeVisible();
     await expect(page).toHaveURL(/\/Catalog\/Create$/);
-    await expect(page.getByText('The field Price must be a positive number with maximum two decimals.')).toBeVisible();
-    await expect(page.getByText('The value must be a non-negative integer.')).toBeVisible();
+    await expectInvalidPriceAndStockMessages(page, appProfile);
   });
 
   test('DV-3 rejects missing required input', async ({ page, request, appProfile }) => {
-    const missingRequiredResponse = await request.post('/api/catalog-items', {
-      data: {
-        name: '',
-        description: 'Missing required fields',
-        catalogBrandId: 0,
-        catalogTypeId: 0,
-        price: 12.1,
-        availableStock: 1,
-        restockThreshold: 0,
-        maxStockThreshold: 2,
-      },
-    });
+    if (appProfile.name === 'angular') {
+      const missingRequiredResponse = await request.post('/api/catalog-items', {
+        data: {
+          name: '',
+          description: 'Missing required fields',
+          catalogBrandId: 0,
+          catalogTypeId: 0,
+          price: 12.1,
+          availableStock: 1,
+          restockThreshold: 0,
+          maxStockThreshold: 2,
+        },
+      });
 
-    await expectValidationError(missingRequiredResponse, 'Name');
-    await expectValidationError(missingRequiredResponse, 'CatalogBrandId');
-    await expectValidationError(missingRequiredResponse, 'CatalogTypeId');
+      await expectValidationError(missingRequiredResponse, 'Name');
+      await expectValidationError(missingRequiredResponse, 'CatalogBrandId');
+      await expectValidationError(missingRequiredResponse, 'CatalogTypeId');
+    }
 
     await openCreateForm(page, appProfile);
     await createButton(page).click();
 
     await expect(pageHeading(page, 'Create')).toBeVisible();
     await expect(page).toHaveURL(/\/Catalog\/Create$/);
-    await expect(page.getByText('This field is required.').first()).toBeVisible();
+    await expectMissingRequiredMessages(page, appProfile);
     await expect(field(page, 'name')).toBeVisible();
     await expect(field(page, 'brand')).toBeVisible();
     await expect(field(page, 'type')).toBeVisible();
