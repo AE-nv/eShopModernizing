@@ -1,4 +1,4 @@
-# BEFORE
+# PREP
 
 ```powershell
 cd eShopLegacyWebFormsSolution
@@ -16,12 +16,13 @@ Browse to `http://localhost:50586/`
 
 
 ```powershell
-npm install
 npm --prefix .\catalog-admin-ui install
 dotnet build .\catalog-admin-api\CatalogAdmin.Api.csproj
 npm --prefix .\catalog-admin-ui run build -- --configuration development
 dotnet run --project .\catalog-admin-api\CatalogAdmin.Api.csproj --no-build --urls http://localhost:54001
 ```
+
+
 
 # SHOW LEGACY
 
