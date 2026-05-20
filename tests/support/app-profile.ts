@@ -4,6 +4,7 @@ export type AppProfileName = 'webforms' | 'angular';
 
 export type AppProfile = {
   name: AppProfileName;
+  baseURL: string;
   homePath: string;
   homeUrl: RegExp;
   pagePath: (index: number, size?: number) => string;
@@ -16,19 +17,19 @@ const webFormsAppPath = 'C:\\Users\\WouterVanRanst\\repos\\ae-eshopmodernizing\\
 const profiles: Record<AppProfileName, AppProfile> = {
   webforms: {
     name: 'webforms',
+    baseURL: 'http://localhost:50586',
     homePath: '/',
     homeUrl: /\/(?:Default(?:\.aspx)?)?$/,
     pagePath: (index, size = defaultPageSize) => `/Default/index/${index}/size/${size}`,
     pageUrl: (index, size = defaultPageSize) => new RegExp(`/Default/index/${index}/size/${size}$`),
-    webServerCommand: `"C:\\Program Files\\IIS Express\\iisexpress.exe" /path:"${webFormsAppPath}" /port:54001`,
   },
   angular: {
     name: 'angular',
+    baseURL: 'http://localhost:54001',
     homePath: '/catalog',
     homeUrl: /\/catalog$/,
     pagePath: (index, size = defaultPageSize) => `/catalog/page/${index}/size/${size}`,
     pageUrl: (index, size = defaultPageSize) => new RegExp(`/catalog/page/${index}/size/${size}$`),
-    webServerCommand: 'npm run start:e2e-app',
   },
 };
 

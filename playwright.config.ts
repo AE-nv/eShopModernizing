@@ -2,15 +2,16 @@ import { defineConfig, devices } from '@playwright/test';
 
 import { getAppProfile, type AppProfileName } from './tests/support/app-profile';
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:54001';
 const selectedProject = getSelectedProject(process.argv) ?? 'angular';
 const activeAppProfile = getAppProfile(selectedProject);
 
 function projectConfig(name: AppProfileName) {
+  const profile = getAppProfile(name);
+
   return {
     name,
     use: {
-      baseURL,
+      baseURL: process.env.PLAYWRIGHT_BASE_URL ?? profile.baseURL,
       trace: 'on-first-retry' as const,
       screenshot: 'only-on-failure' as const,
       channel: 'msedge',
@@ -29,8 +30,8 @@ export default defineConfig({
   webServer: activeAppProfile.webServerCommand
     ? {
         command: activeAppProfile.webServerCommand,
-        url: `${baseURL}${activeAppProfile.homePath}`,
-        reuseExistingServer: false,
+        url: `${process.env.PLAYWRIGHT_BASE_URL ?? activeAppProfile.baseURL}${activeAppProfile.homePath}`,
+        reuseExistingServer: true,
         timeout: 240000,
       }
     : undefined,
