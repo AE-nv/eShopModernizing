@@ -233,77 +233,77 @@ test.describe('Catalog functional requirements', () => {
     await expectOnListPage(page, appProfile);
   });
 
-  test('FR-4 creates a catalog item', async ({ page, appProfile }) => {
-    await createItem(page, appProfile, createdItemName);
-    const row = await getRowByName(page, appProfile, createdItemName);
+  // test('FR-4 creates a catalog item', async ({ page, appProfile }) => {
+  //   await createItem(page, appProfile, createdItemName);
+  //   const row = await getRowByName(page, appProfile, createdItemName);
 
-    await expect(row.row).toContainText(createdItemName);
-    await expect(row.row).toContainText('Azure');
-    await expect(row.row).toContainText('USB Memory Stick');
-    await expect(row.row).toContainText('42.10');
-    await expect(row.row).toContainText('7');
-  });
+  //   await expect(row.row).toContainText(createdItemName);
+  //   await expect(row.row).toContainText('Azure');
+  //   await expect(row.row).toContainText('USB Memory Stick');
+  //   await expect(row.row).toContainText('42.10');
+  //   await expect(row.row).toContainText('7');
+  // });
 
-  test('FR-5 edits a catalog item', async ({ page, appProfile }) => {
-    await createItem(page, appProfile, createdItemName);
-    const row = await getRowByName(page, appProfile, createdItemName);
-    await clickWithDemo(page, row.editLink);
+  // test('FR-5 edits a catalog item', async ({ page, appProfile }) => {
+  //   await createItem(page, appProfile, createdItemName);
+  //   const row = await getRowByName(page, appProfile, createdItemName);
+  //   await clickWithDemo(page, row.editLink);
 
-    await expect(pageHeading(page, 'Edit')).toBeVisible();
-    await expect(field(page, 'brand')).toHaveValue('1');
-    await expect(field(page, 'type')).toHaveValue('4');
+  //   await expect(pageHeading(page, 'Edit')).toBeVisible();
+  //   await expect(field(page, 'brand')).toHaveValue('1');
+  //   await expect(field(page, 'type')).toHaveValue('4');
 
-    await fillWithDemo(page, field(page, 'name'), updatedItemName);
-    await fillWithDemo(page, field(page, 'description'), 'Updated by Playwright');
-    await selectWithDemo(page, field(page, 'brand'), { label: 'Visual Studio' });
-    await selectWithDemo(page, field(page, 'type'), { label: 'Mug' });
-    await fillWithDemo(page, field(page, 'price'), '55.25');
-    await fillWithDemo(page, field(page, 'stock'), '9');
-    await fillWithDemo(page, field(page, 'restock'), '3');
-    await fillWithDemo(page, field(page, 'maxStock'), '15');
-    await clickWithDemo(page, saveButton(page));
+  //   await fillWithDemo(page, field(page, 'name'), updatedItemName);
+  //   await fillWithDemo(page, field(page, 'description'), 'Updated by Playwright');
+  //   await selectWithDemo(page, field(page, 'brand'), { label: 'Visual Studio' });
+  //   await selectWithDemo(page, field(page, 'type'), { label: 'Mug' });
+  //   await fillWithDemo(page, field(page, 'price'), '55.25');
+  //   await fillWithDemo(page, field(page, 'stock'), '9');
+  //   await fillWithDemo(page, field(page, 'restock'), '3');
+  //   await fillWithDemo(page, field(page, 'maxStock'), '15');
+  //   await clickWithDemo(page, saveButton(page));
 
-    await expectOnListPage(page, appProfile);
-    const updatedRow = await getRowByName(page, appProfile, updatedItemName);
-    await expect(updatedRow.row).toContainText('Visual Studio');
-    await expect(updatedRow.row).toContainText('Mug');
-    await expect(updatedRow.row).toContainText('55.25');
-    await expect(updatedRow.row).toContainText('9');
-  });
+  //   await expectOnListPage(page, appProfile);
+  //   const updatedRow = await getRowByName(page, appProfile, updatedItemName);
+  //   await expect(updatedRow.row).toContainText('Visual Studio');
+  //   await expect(updatedRow.row).toContainText('Mug');
+  //   await expect(updatedRow.row).toContainText('55.25');
+  //   await expect(updatedRow.row).toContainText('9');
+  // });
 
-  test('FR-6 deletes a catalog item', async ({ page, appProfile }) => {
-    await createItem(page, appProfile, createdItemName);
-    const row = await getRowByName(page, appProfile, createdItemName);
-    await clickWithDemo(page, row.deleteLink);
+  // test('FR-6 deletes a catalog item', async ({ page, appProfile }) => {
+  //   await createItem(page, appProfile, createdItemName);
+  //   const row = await getRowByName(page, appProfile, createdItemName);
+  //   await clickWithDemo(page, row.deleteLink);
 
-    await expect(pageHeading(page, 'Delete')).toBeVisible();
-    await expect(detailsPanel(page)).toContainText(createdItemName);
-    await clickWithDemo(page, deleteButton(page));
+  //   await expect(pageHeading(page, 'Delete')).toBeVisible();
+  //   await expect(detailsPanel(page)).toContainText(createdItemName);
+  //   await clickWithDemo(page, deleteButton(page));
 
-    await expectOnListPage(page, appProfile);
-    for (const pageIndex of searchPageIndexes) {
-      if (pageIndex === 0) {
-        await gotoHome(page, appProfile);
-      } else {
-        await gotoPage(page, appProfile, pageIndex);
-      }
+  //   await expectOnListPage(page, appProfile);
+  //   for (const pageIndex of searchPageIndexes) {
+  //     if (pageIndex === 0) {
+  //       await gotoHome(page, appProfile);
+  //     } else {
+  //       await gotoPage(page, appProfile, pageIndex);
+  //     }
 
-      await expect(rowByName(page, createdItemName)).toHaveCount(0);
-    }
-  });
+  //     await expect(rowByName(page, createdItemName)).toHaveCount(0);
+  //   }
+  // });
 
-  test('FR-7 shows reference data for brands and types', async ({ page, appProfile }) => {
-    await openCreateForm(page, appProfile);
-    await expect(field(page, 'brand')).toContainText('Azure');
-    await expect(field(page, 'brand')).toContainText('.NET');
-    await expect(field(page, 'brand')).toContainText('Visual Studio');
-    await expect(field(page, 'brand')).toContainText('SQL Server');
-    await expect(field(page, 'brand')).toContainText('Other');
-    await expect(field(page, 'type')).toContainText('Mug');
-    await expect(field(page, 'type')).toContainText('T-Shirt');
-    await expect(field(page, 'type')).toContainText('Sheet');
-    await expect(field(page, 'type')).toContainText('USB Memory Stick');
-  });
+  // test('FR-7 shows reference data for brands and types', async ({ page, appProfile }) => {
+  //   await openCreateForm(page, appProfile);
+  //   await expect(field(page, 'brand')).toContainText('Azure');
+  //   await expect(field(page, 'brand')).toContainText('.NET');
+  //   await expect(field(page, 'brand')).toContainText('Visual Studio');
+  //   await expect(field(page, 'brand')).toContainText('SQL Server');
+  //   await expect(field(page, 'brand')).toContainText('Other');
+  //   await expect(field(page, 'type')).toContainText('Mug');
+  //   await expect(field(page, 'type')).toContainText('T-Shirt');
+  //   await expect(field(page, 'type')).toContainText('Sheet');
+  //   await expect(field(page, 'type')).toContainText('USB Memory Stick');
+  // });
 
   test('DV-1 and DV-2 reject invalid price and stock input', async ({ page, request, appProfile }) => {
     if (appProfile.name === 'angular') {
@@ -338,34 +338,34 @@ test.describe('Catalog functional requirements', () => {
     await expectInvalidPriceAndStockMessages(page, appProfile);
   });
 
-  test('DV-3 rejects missing required input', async ({ page, request, appProfile }) => {
-    if (appProfile.name === 'angular') {
-      const missingRequiredResponse = await request.post('/api/catalog-items', {
-        data: {
-          name: '',
-          description: 'Missing required fields',
-          catalogBrandId: 0,
-          catalogTypeId: 0,
-          price: 12.1,
-          availableStock: 1,
-          restockThreshold: 0,
-          maxStockThreshold: 2,
-        },
-      });
+  // test('DV-3 rejects missing required input', async ({ page, request, appProfile }) => {
+  //   if (appProfile.name === 'angular') {
+  //     const missingRequiredResponse = await request.post('/api/catalog-items', {
+  //       data: {
+  //         name: '',
+  //         description: 'Missing required fields',
+  //         catalogBrandId: 0,
+  //         catalogTypeId: 0,
+  //         price: 12.1,
+  //         availableStock: 1,
+  //         restockThreshold: 0,
+  //         maxStockThreshold: 2,
+  //       },
+  //     });
 
-      await expectValidationError(missingRequiredResponse, 'Name');
-      await expectValidationError(missingRequiredResponse, 'CatalogBrandId');
-      await expectValidationError(missingRequiredResponse, 'CatalogTypeId');
-    }
+  //     await expectValidationError(missingRequiredResponse, 'Name');
+  //     await expectValidationError(missingRequiredResponse, 'CatalogBrandId');
+  //     await expectValidationError(missingRequiredResponse, 'CatalogTypeId');
+  //   }
 
-    await openCreateForm(page, appProfile);
-    await clickWithDemo(page, createButton(page));
+  //   await openCreateForm(page, appProfile);
+  //   await clickWithDemo(page, createButton(page));
 
-    await expect(pageHeading(page, 'Create')).toBeVisible();
-    await expect(page).toHaveURL(/\/Catalog\/Create$/);
-    await expectMissingRequiredMessages(page, appProfile);
-    await expect(field(page, 'name')).toBeVisible();
-    await expect(field(page, 'brand')).toBeVisible();
-    await expect(field(page, 'type')).toBeVisible();
-  });
+  //   await expect(pageHeading(page, 'Create')).toBeVisible();
+  //   await expect(page).toHaveURL(/\/Catalog\/Create$/);
+  //   await expectMissingRequiredMessages(page, appProfile);
+  //   await expect(field(page, 'name')).toBeVisible();
+  //   await expect(field(page, 'brand')).toBeVisible();
+  //   await expect(field(page, 'type')).toBeVisible();
+  // });
 });

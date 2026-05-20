@@ -31,7 +31,7 @@ dotnet run --project .\catalog-admin-api\CatalogAdmin.Api.csproj --no-build --ur
 # SHOW GOLDEN MASTER LEGACY
 
 ```powershell
-$env:PLAYWRIGHT_DEMO_DELAY_MS = '1000'
+$env:PLAYWRIGHT_DEMO_DELAY_MS = '500'
 npx playwright test tests/goldenmaster.spec.ts --project webforms --headed
 ```
 
@@ -42,6 +42,6 @@ npx playwright test tests/goldenmaster.spec.ts --project webforms --headed
 # SHOW GOLDEN MASTER MODERNIZED
 
 ```powershell
-$env:PLAYWRIGHT_DEMO_DELAY_MS = '1000'
+$env:PLAYWRIGHT_DEMO_DELAY_MS = '500'
 npx playwright test tests/goldenmaster.spec.ts --project angular --headed
 ```
