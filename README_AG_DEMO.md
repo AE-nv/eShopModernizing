@@ -28,6 +28,13 @@ dotnet run --project .\catalog-admin-api\CatalogAdmin.Api.csproj --no-build --ur
 
 `http://localhost:50586/`
 
+
+# Generate Docs
+
+```
+generate the documentation for the eshoplegacywebformssolution
+```
+
 # SHOW GOLDEN MASTER LEGACY
 
 ```powershell
