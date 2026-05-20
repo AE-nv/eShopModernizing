@@ -1,6 +1,6 @@
 ## Context
 
-The existing `docs/` set describes a legacy catalog administration module implemented in ASP.NET Web Forms. The Playwright suite in `tests/catalog-functional-requirements.spec.ts` captures the key end-to-end business flows and concrete sample data currently observable in the legacy UI.
+The existing `docs/` set describes a legacy catalog administration module implemented in ASP.NET Web Forms. The Playwright suite in `tests/goldenmaster.spec.ts` captures the key end-to-end business flows and concrete sample data currently observable in the legacy UI.
 
 This change defines the target behavior for a replacement implementation using:
 

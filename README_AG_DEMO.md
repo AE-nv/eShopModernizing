@@ -31,7 +31,7 @@ dotnet run --project .\catalog-admin-api\CatalogAdmin.Api.csproj --no-build --ur
 
 ```powershell
 $env:PLAYWRIGHT_DEMO_DELAY_MS = '1000'
-npx playwright test tests/catalog-functional-requirements.spec.ts --project webforms --headed
+npx playwright test tests/goldenmaster.spec.ts --project webforms --headed
 ```
 
 # SHOW MODERN
@@ -42,5 +42,5 @@ npx playwright test tests/catalog-functional-requirements.spec.ts --project webf
 
 ```powershell
 $env:PLAYWRIGHT_DEMO_DELAY_MS = '1000'
-npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
+npx playwright test tests/goldenmaster.spec.ts --project angular --headed
 ```

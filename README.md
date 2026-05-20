@@ -86,7 +86,7 @@ Refer generate-tests.prompt.md. Generate playwright tests for the functional req
 Use the `webforms` Playwright project:
 
 ```powershell
-npx playwright test tests/catalog-functional-requirements.spec.ts --project webforms --headed
+npx playwright test tests/goldenmaster.spec.ts --project webforms --headed
 ```
 
 
@@ -109,7 +109,7 @@ openspec init
 
 In your agent:
 ```
-Create an openspec change to implement the functionality in `docs`. The playwright test suite `C:\Users\WouterVanRanst\repos\ae-eshopmodernizing\eShopModernizing\tests\catalog-functional-requirements.spec.ts`. Target architecture is .NET 10 ASP.NET Core Web API + Angular. The name of the new application is eShopModernized.
+Create an openspec change to implement the functionality in `docs`. The playwright test suite `C:\Users\WouterVanRanst\repos\ae-eshopmodernizing\eShopModernizing\tests\goldenmaster.spec.ts`. Target architecture is .NET 10 ASP.NET Core Web API + Angular. The name of the new application is eShopModernized.
 ```
 
 ### Implement the spec
@@ -143,7 +143,7 @@ Stop the app with `Ctrl+C`.
 Use the `angular` Playwright project. Playwright will build and start the modernized app automatically.
 
 ```powershell
-npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
+npx playwright test tests/goldenmaster.spec.ts --project angular --headed
 ```
 
 ## Run the Golden Master against both apps
@@ -152,6 +152,6 @@ For a slower demo run, set `PLAYWRIGHT_DEMO_DELAY_MS` to add a pause before each
 
 ```powershell
 $env:PLAYWRIGHT_DEMO_DELAY_MS = '1000'
-npx playwright test tests/catalog-functional-requirements.spec.ts --project webforms --headed
-npx playwright test tests/catalog-functional-requirements.spec.ts --project angular --headed
+npx playwright test tests/goldenmaster.spec.ts --project webforms --headed
+npx playwright test tests/goldenmaster.spec.ts --project angular --headed
 ```
